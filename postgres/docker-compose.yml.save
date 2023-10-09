@@ -1,0 +1,23 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  postgres:
+    image: postgres:14.2-alpine
+    container_name: postgres
+    #command: --default-authentication-plugin=mysql_native_password --max_allowed_packet=32505856 
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: @Kuadran123456
+    ports:
+      - 5433:5432
+    volumes:
+      - postgres_local_db:/var/lib/postgresql/data
+
+volumes: 
+  postgres_local_db:
+
+networks:
+  kuadran:
+    name: 
