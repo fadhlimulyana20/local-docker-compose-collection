@@ -1,0 +1,51 @@
+version: '3.1'
+
+services:
+  # traefik:
+  #   image: traefik:v2.9
+  #   container_name: traefik
+  #   command:
+  #     #- "--log.level=DEBUG"
+  #     - "--api.insecure=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.websecure.address=:443"
+  #     - "--certificatesresolvers.mytlschallenge.acme.tlschallenge=true"
+  #     #- "--certificatesresolvers.mytlschallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+  #     - "--certificatesresolvers.mytlschallenge.acme.email=fmcloud1406@gmail.com"
+  #     - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
+  #   ports:
+  #     #- "80:80"
+  #     - "443:443"
+  #     - "8081:8080"
+  #   volumes:
+  #     - "./letsencrypt:/letsencrypt"
+  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  jenkins:
+    image: jenkins/jenkins:lts-jdk11
+    privileged: true
+    networks:
+      - jenkins
+    volumes:
+      - jenkins-docker-certs:/certs/client
+      - jenkins-data:/var/jenkins_home
+    ports:
+      - 8080:8080
+      - 50000:50000
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.skripsi.rule=Host(`jenkins.kuadran.co`)"
+    #   #- "traefik.http.routers.skripsi.entrypoints=web"
+    #   - "traefik.http.routers.skripsi.entrypoints=websecure"
+    #   - "traefik.http.routers.skripsi.tls.certresolver=mytlschallenge"
+
+networks:
+  jenkins:
+    driver: bridge
+
+volumes:
+  jenkins-docker-certs:
+  jenkins-data:
