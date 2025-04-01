@@ -5,12 +5,34 @@ services:
     container_name: portainer
     image: portainer/portainer-ce:alpine
     restart: always
+    labels:
+      # Frontend
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`portainer.yourdomain.com`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.services.frontend.loadbalancer.server.port=9000"
+      - "traefik.http.routers.frontend.service=frontend"
+      - "traefik.http.routers.frontend.tls.certresolver=mytlschallenge"
+
+      # Edge
+      - "traefik.http.routers.edge.rule=Host(`edge.yourdomain.com`)"
+      - "traefik.http.routers.edge.entrypoints=websecure"
+      - "traefik.http.services.edge.loadbalancer.server.port=8000"
+      - "traefik.http.routers.edge.service=edge"
+      - "traefik.http.routers.edge.tls.certresolver=mytlschallenge"
+      - "traefik.docker.network=traefik_traefik"
     ports:
       - 8001:8000
       - 9443:9443
     volumes:
       - portainer_data:/data
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik_traefik
+
 volumes:
   portainer_data:
 
+networks:
+  traefik_traefik:
+    external: true
