@@ -1,0 +1,20 @@
+services:
+  web:
+    image: odoo:19.0
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+      - ./odoo.conf:/etc/odoo/odoo.conf:ro
+    networks:
+      - postgres_default
+    # env_file:
+    #   - .env
+volumes:
+  odoo-web-data:
+
+networks:
+  postgres_default:
+    external: true

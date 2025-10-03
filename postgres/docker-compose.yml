@@ -16,3 +16,5 @@ services:
 
 volumes: 
   postgres_local_db:
+    driver: bridge
+
